@@ -20,36 +20,37 @@ const double pi = 3.14159265358979323846;
 const int INF = 0x3f3f3f3f;
 const int X10=1024,X11=2048,X12=4096,X13=8196,X14=16392,X15=32786,X16=65536,X17=131072,X18=262144,X19=524288,X20=1048576;
 
-bool is_palindrome(string s) {
-    for (int i = 0; i < s.size(); ++i) {
-        if (s[i] != s[s.size() - 1 - i])return 0;
-    }
-    return !s.empty();
-}
-
+int A[5*3600+1];
 void _() {
-    int num;
-    cin >> num;
-    cin.ignore();
-    rep(c, 1, num + 1) {
-        cout << "Case #" << c << ":\n";
-        string s;
-        getline(cin, s);
-        stringstream ss;
-        string str, str1;
-        ss << s;
-        char temp;
-        while (ss >> temp) { if (isalpha(temp))str += temp; }
-        int d = round(sqrt(str.size()));
-        if (d * d == str.size()) {
-            for (int i = 0; i < d; ++i) {
-                for (int j = 0; j < d; ++j) {
-                    str1 += str[j * d + i];
+    bool brk=false;
+    while (1){
+        memset(A,0, sizeof(int)*(5*3600+1));
+        int mi=INF,nums=0;
+        int t;
+        while (cin >> t){
+            if(t==0){
+                if(brk)return;
+                else {brk=true;
+                    break;}
+            }
+            else{brk=false;}
+            nums++;
+            for (int i = 0; i < (5*3600)+1; i+=2*t) {
+                for (int j = i; j < i+t-5; ++j) {
+                    if(j<5*3600+1)A[j]++;
                 }
             }
+            mi=min(mi,t);
         }
-        cout << ((is_palindrome(str) && is_palindrome(str1)) ? to_string(d) : "No magic :(") << "\n";
-
+        int tm=find(A+2*mi,A+5*3600+1,nums)-A;
+        if(tm==5*3600+1)cout <<"Signals fail to synchronise in 5 hours" <<"\n";
+        else{
+            cout << setfill('0') << setw(2)<< (tm/3600);
+            cout << ":";
+            cout << setfill('0') << setw(2)<< (tm%3600/60);
+            cout << ":";
+            cout << setfill('0') << setw(2)<< (tm%3600%60) <<"\n";
+        }
 
     }
 
